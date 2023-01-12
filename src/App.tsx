@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import {TasksType, TodoList} from "./TodoList";
 import {v1} from "uuid";
+import UltraInput from "./ultraComponents/UltraInput";
 
 
 export type FilterTasksType = "All" | "Active" | "Completed"
@@ -12,7 +13,7 @@ type TodoListType = {
 }
 
 
-type TodoListsType = {
+type TodoListsTasksType = {
     [key: string]: TasksType[]
 }
 
@@ -26,7 +27,7 @@ function App() {
         {id: todolistID2, title: 'What to buy', filter: 'All'},
     ])
 
-    let [firstListTasks, setFirstListTasks] = useState<TodoListsType>({
+    let [firstListTasks, setFirstListTasks] = useState<TodoListsTasksType>({
         [todolistID1]:[
             {id: v1(), title: "HTML&CSS", isDone: true},
             {id: v1(), title: "JS", isDone: true},
@@ -65,11 +66,27 @@ function App() {
         setTodolists(todoLists.filter(el => el.id !== todoListId))
     }
 
+    const addNewTodoList = (newValue: string) => {
+        const idForNewTodoList = v1()
+        let newTodoList: TodoListType = {id: idForNewTodoList, title: newValue, filter: 'All'}
+        setTodolists([newTodoList,...todoLists])
+        setFirstListTasks({...firstListTasks, [idForNewTodoList]: []})
+    }
 
+    const updateTasks = (todoListId:string, tasksId:string, newValue: string) => {
+        setFirstListTasks({...firstListTasks, [todoListId]: firstListTasks[todoListId].map(el => el.id === tasksId ? {...el, title: newValue} : el)})
+    }
 
+    const updateTodolistsTitle = (todoListId:string, newValue: string) => {
+        console.log(newValue)
+        setTodolists(todoLists.map(el => el.id === todoListId ? {...el, title: newValue} : el))
+    }
 
     return (
         <div className="App">
+            <div style={{position: "absolute"}}> ADD NEW TODOLIST
+                <UltraInput callback={addNewTodoList}/>
+            </div>
             {todoLists.map(el => {
 
                 const getFilteredTasksForRender = () => {
@@ -96,6 +113,8 @@ function App() {
                         addTask={addTask}
                         filterTasks={el.filter}
                         deleteTodoList={deleteTodoListHandler}
+                        updateTasks={updateTasks}
+                        updateTodolistsTitle={updateTodolistsTitle}
                     />
                 )
             })}

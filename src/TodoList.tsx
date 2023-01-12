@@ -1,6 +1,8 @@
 import React, {ChangeEvent, useState, KeyboardEvent} from "react";
 import {FilterTasksType} from "./App";
 import './App.css';
+import UltraInput from "./ultraComponents/UltraInput";
+import UltraSpanForChangeValue from "./ultraComponents/UltraSpanForChangeValue";
 
 type ListPropsType = {
     title: string
@@ -12,6 +14,8 @@ type ListPropsType = {
     addTask: (todoListId:string, title: string) => void
     changeIsDoneStatus: (todoListId:string ,taskId: string, checked: boolean) => void
     deleteTodoList: (todoListId: string) => void
+    updateTasks: (todoListId:string, tasksId:string, newValue: string) => void
+    updateTodolistsTitle: (todoListId:string, newValue: string) => void
 }
 
 export type TasksType = {
@@ -22,34 +26,9 @@ export type TasksType = {
 
 export const TodoList = (props: ListPropsType) => {
 
-    const [localStateForNewTask, setLocalStateForNewTask] = useState<string>('')
-    const [error, setError] = useState<string | null>(null)
-
-    const onChangeInputValueHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setLocalStateForNewTask(event.currentTarget.value)
-        setError(null)
-    }
-
     const onChangeTaskStatusHandler = (checked: boolean, el: string) => {
         props.changeIsDoneStatus(props.todoListId,el, checked)
     }
-
-    const onClickButtonHandler = () => {
-        if(localStateForNewTask.trim() === ''){
-            setError('Failed, please write something')
-            setLocalStateForNewTask('')
-            return
-        }
-        props.addTask(props.todoListId,localStateForNewTask.trim())
-        setLocalStateForNewTask('')
-        setError(null)
-    }
-
-    const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => event.key === "Enter" && onClickButtonHandler()
-
-    // const onClickSetAllFilter = () => props.filterButton("All")
-    // const onClickSetActiveFilter = () => props.filterButton("Active")
-    // const onClickSetCompletedFilter = () => props.filterButton("Completed")
 
     const takeOnClickFilterHandler = (filter: FilterTasksType) => () => props.filterButton(props.todoListId, filter)
 
@@ -57,15 +36,31 @@ export const TodoList = (props: ListPropsType) => {
         props.deleteTodoList(props.todoListId)
     }
 
+    const updateTodolistsTitleCallBack = (newValue: string) => {
+        props.updateTodolistsTitle(props.todoListId, newValue)
+    }
+
+    const addTask = (newValue: string) => {
+        props.addTask(props.todoListId, newValue)
+    }
+
+    const changeTaskTitleForMap = (elId: string, newValue: string) => {
+        props.updateTasks(props.todoListId, elId, newValue)
+    }
+
     const TasksItems = props.tasks.length ?
         props.tasks.map((el: TasksType) => {
 
             const onClickDeleteHandler = () => props.removeTask(props.todoListId, el.id)
             const onChangeTaskStatusMap = (event: ChangeEvent<HTMLInputElement>) => onChangeTaskStatusHandler(event.currentTarget.checked, el.id)
+            const changeTasksTitle = (newValue: string) => {
+                changeTaskTitleForMap(el.id,newValue)
+            }
+
 
             return <li className={el.isDone ? 'is-done' : ''} key={el.id}>
                 <input onChange={onChangeTaskStatusMap} type="checkbox" checked={el.isDone}/>
-                <span>{el.title}</span>
+                <UltraSpanForChangeValue oldTitle={el.title} callBack={changeTasksTitle}/>
                 <button onClick={onClickDeleteHandler}>x</button>
             </li>
         })
@@ -76,20 +71,16 @@ export const TodoList = (props: ListPropsType) => {
     return (
         <div>
             <span style={{display: "flex", alignItems: "center"}}>
-                <h3>{props.title}</h3>
+                <h3>
+                    <UltraSpanForChangeValue oldTitle={props.title} callBack={updateTodolistsTitleCallBack}/>
+                </h3>
                 <button onClick={deleteTodoListHandler}>x</button>
             </span>
 
             <div>
-                <input
-                    className={ error ? 'error' : ''}
-                    value={localStateForNewTask}
-                    onChange={onChangeInputValueHandler}
-                    onKeyDown={onKeyDownHandler}
-                />
-                <button onClick={onClickButtonHandler}>+</button>
+                <UltraInput callback={addTask} />
             </div>
-            {error && <div className={'error-message'}>{error}</div>}
+
             <ul>
                 {TasksItems}
             </ul>
