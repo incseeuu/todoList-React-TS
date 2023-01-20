@@ -3,19 +3,23 @@ import {FilterTasksType} from "./App";
 import './App.css';
 import UltraInput from "./ultraComponents/UltraInput";
 import UltraSpanForChangeValue from "./ultraComponents/UltraSpanForChangeValue";
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Checkbox from '@mui/material/Checkbox';
 
 type ListPropsType = {
     title: string
     tasks: Array<TasksType>
     todoListId: string
     filterTasks: string
-    removeTask: (todoListId: string,taskId: string) => void
-    filterButton: (todoListId: string,element: FilterTasksType) => void
-    addTask: (todoListId:string, title: string) => void
-    changeIsDoneStatus: (todoListId:string ,taskId: string, checked: boolean) => void
+    removeTask: (todoListId: string, taskId: string) => void
+    filterButton: (todoListId: string, element: FilterTasksType) => void
+    addTask: (todoListId: string, title: string) => void
+    changeIsDoneStatus: (todoListId: string, taskId: string, checked: boolean) => void
     deleteTodoList: (todoListId: string) => void
-    updateTasks: (todoListId:string, tasksId:string, newValue: string) => void
-    updateTodolistsTitle: (todoListId:string, newValue: string) => void
+    updateTasks: (todoListId: string, tasksId: string, newValue: string) => void
+    updateTodolistsTitle: (todoListId: string, newValue: string) => void
 }
 
 export type TasksType = {
@@ -27,7 +31,7 @@ export type TasksType = {
 export const TodoList = (props: ListPropsType) => {
 
     const onChangeTaskStatusHandler = (checked: boolean, el: string) => {
-        props.changeIsDoneStatus(props.todoListId,el, checked)
+        props.changeIsDoneStatus(props.todoListId, el, checked)
     }
 
     const takeOnClickFilterHandler = (filter: FilterTasksType) => () => props.filterButton(props.todoListId, filter)
@@ -54,14 +58,17 @@ export const TodoList = (props: ListPropsType) => {
             const onClickDeleteHandler = () => props.removeTask(props.todoListId, el.id)
             const onChangeTaskStatusMap = (event: ChangeEvent<HTMLInputElement>) => onChangeTaskStatusHandler(event.currentTarget.checked, el.id)
             const changeTasksTitle = (newValue: string) => {
-                changeTaskTitleForMap(el.id,newValue)
+                changeTaskTitleForMap(el.id, newValue)
             }
 
 
             return <li className={el.isDone ? 'is-done' : ''} key={el.id}>
-                <input onChange={onChangeTaskStatusMap} type="checkbox" checked={el.isDone}/>
+                {/*<input onChange={onChangeTaskStatusMap} type="checkbox" checked={el.isDone}/>*/}
+                <Checkbox  onChange={onChangeTaskStatusMap} checked={el.isDone} color="secondary" />
                 <UltraSpanForChangeValue oldTitle={el.title} callBack={changeTasksTitle}/>
-                <button onClick={onClickDeleteHandler}>x</button>
+                <IconButton aria-label="delete" onClick={onClickDeleteHandler}>
+                    <DeleteIcon/>
+                </IconButton>
             </li>
         })
         :
@@ -69,25 +76,31 @@ export const TodoList = (props: ListPropsType) => {
 
 
     return (
-        <div>
-            <span style={{display: "flex", alignItems: "center"}}>
+        <div >
+            <span style={{display: "flex", alignItems: "center", justifyContent: 'center'}}>
                 <h3>
                     <UltraSpanForChangeValue oldTitle={props.title} callBack={updateTodolistsTitleCallBack}/>
                 </h3>
-                <button onClick={deleteTodoListHandler}>x</button>
+                {/*<button onClick={deleteTodoListHandler}>x</button>*/}
+                <IconButton aria-label="delete" onClick={deleteTodoListHandler}>
+                    <DeleteIcon/>
+                </IconButton>
             </span>
 
             <div>
-                <UltraInput callback={addTask} />
+                <UltraInput callback={addTask}/>
             </div>
 
             <ul>
                 {TasksItems}
             </ul>
             <div>
-                <button className={props.filterTasks === 'All' ? 'active-filter': ''} onClick={takeOnClickFilterHandler('All')}>All</button>
-                <button className={props.filterTasks === 'Active' ? 'active-filter': ''} onClick={takeOnClickFilterHandler('Active')}>Active</button>
-                <button className={props.filterTasks === 'Completed' ? 'active-filter': ''} onClick={takeOnClickFilterHandler('Completed')}>Completed</button>
+                <Button variant={props.filterTasks === 'All' ? 'contained' : "outlined"} color="secondary"
+                        onClick={takeOnClickFilterHandler('All')}>All</Button>
+                <Button variant={props.filterTasks === 'Active' ? 'contained' : "outlined"} color="success"
+                        onClick={takeOnClickFilterHandler('Active')}>Active</Button>
+                <Button variant={props.filterTasks === 'Completed' ? 'contained' : "outlined"} color="error"
+                        onClick={takeOnClickFilterHandler('Completed')}>Completed</Button>
             </div>
         </div>
     )

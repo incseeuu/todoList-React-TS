@@ -1,4 +1,6 @@
 import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 type TypeProps = {
     callback: (newValue: string) => void
@@ -29,14 +31,20 @@ const UltraInput = (props: TypeProps) => {
 
     return (
         <>
-            <input
-                className={ error ? 'error' : ''}
-                value={newValue}
-                onChange={onChangeInputValueHandler}
-                onKeyDown={onKeyDownHandler}
-            />
-            <button onClick={onClickButtonHandler}>+</button>
-            {error && <div className={'error-message'}>{error}</div>}
+            {/*<input*/}
+            {/*    className={ error ? 'error' : ''}*/}
+            {/*    value={newValue}*/}
+            {/*    onChange={onChangeInputValueHandler}*/}
+            {/*    onKeyDown={onKeyDownHandler}*/}
+            {/*/>*/}
+            <TextField id="outlined-basic" size="small"
+                       label={error ? 'Failed, please write something' : 'Write something'}
+                       variant="outlined"
+                       error={!!error}
+                       value={newValue}
+                       onChange={onChangeInputValueHandler}
+                       onKeyDown={onKeyDownHandler}/>
+            <Button size="medium" variant="contained" onClick={onClickButtonHandler}>+</Button>
         </>
     )
 }
