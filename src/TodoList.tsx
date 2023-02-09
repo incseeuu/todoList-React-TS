@@ -19,7 +19,7 @@ type ListPropsType = {
     changeIsDoneStatus: (todoListId: string, taskId: string, checked: boolean) => void
     deleteTodoList: (todoListId: string) => void
     updateTasks: (todoListId: string, tasksId: string, newValue: string) => void
-    updateTodolistsTitle: (todoListId: string, newValue: string) => void
+    updateTodoListsTitle: (todoListId: string, newValue: string) => void
 }
 
 export type TasksType = {
@@ -41,7 +41,7 @@ export const TodoList = (props: ListPropsType) => {
     }
 
     const updateTodolistsTitleCallBack = (newValue: string) => {
-        props.updateTodolistsTitle(props.todoListId, newValue)
+        props.updateTodoListsTitle(props.todoListId, newValue)
     }
 
     const addTask = (newValue: string) => {
@@ -52,7 +52,7 @@ export const TodoList = (props: ListPropsType) => {
         props.updateTasks(props.todoListId, elId, newValue)
     }
 
-    const TasksItems = props.tasks.length ?
+    const TasksItems = props.tasks && props.tasks.length ?
         props.tasks.map((el: TasksType) => {
 
             const onClickDeleteHandler = () => props.removeTask(props.todoListId, el.id)
@@ -63,7 +63,6 @@ export const TodoList = (props: ListPropsType) => {
 
 
             return <li className={el.isDone ? 'is-done' : ''} key={el.id}>
-                {/*<input onChange={onChangeTaskStatusMap} type="checkbox" checked={el.isDone}/>*/}
                 <Checkbox  onChange={onChangeTaskStatusMap} checked={el.isDone} color="secondary" />
                 <UltraSpanForChangeValue oldTitle={el.title} callBack={changeTasksTitle}/>
                 <IconButton aria-label="delete" onClick={onClickDeleteHandler}>
