@@ -1,8 +1,7 @@
 import { v1 } from "uuid";
-import {TodoListType} from "../App";
 import {
     addNewTodoListAC, changeFilterTasksAC,
-    removeTodoListAC,
+    removeTodoListAC, setTodoListAC, TodoListEntityType,
     todoListsReducer,
     updateTodoListsTitleAC
 } from "../reducers/todolists-reducer";
@@ -10,15 +9,15 @@ import {
 let todolistID1: string
 let todolistID2: string
 
-let startState: TodoListType[]
+let startState: TodoListEntityType[]
 
 beforeEach(() => {
     todolistID1 = v1()
     todolistID2 = v1()
 
     startState = [
-        {id: todolistID1, title: 'What to learn', filter: 'All'},
-        {id: todolistID2, title: 'What to buy', filter: 'All'},
+        {id: todolistID1, title: 'What to learn', filter: 'All', addedDate: '', order: 0},
+        {id: todolistID2, title: 'What to buy', filter: 'All', addedDate: '', order: 0},
     ]
 })
 
@@ -64,3 +63,13 @@ test('change todolist filter', () => {
     expect(endState[1].filter).toBe('Completed')
 })
 
+test('set todolist', () => {
+    const endState = todoListsReducer(startState, setTodoListAC( [
+        {id: todolistID1, title: 'Set Todo One', addedDate: '', order: 0},
+        {id: todolistID2, title: 'Set Todo Two', addedDate: '', order: 0}
+    ]))
+
+    expect(endState[0].title).toBe('Set Todo One')
+    expect(endState[1].filter).toBe('All')
+    expect(endState.length).toBe(2)
+})

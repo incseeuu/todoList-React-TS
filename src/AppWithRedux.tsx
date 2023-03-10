@@ -1,35 +1,23 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {TasksType} from "./TodoList";
 import UltraInput from "./ultraComponents/UltraInput";
 import ButtonAppBar from "./components/Header";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import {addNewTodoListAC} from "./reducers/todolists-reducer";
-
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./store/store";
+import {addNewTodoListAC, getTodoListThunkCreator, TodoListEntityType} from "./reducers/todolists-reducer";
+import {useAppDispatch, useAppSelector} from "./store/store";
 import {TodoListWithRedux} from "./TodoListWithRedux";
 
 
-export type FilterTasksType = "All" | "Active" | "Completed"
-export type TodoListType = {
-    id: string
-    title: string
-    filter: FilterTasksType
-}
-
-
-export type TodoListsTasksType = {
-    [key: string]: TasksType[]
-}
-
 function AppWithRedux() {
 
-    const todoLists = useSelector<AppRootStateType, TodoListType[]>(state => state.todoListsReducer)
-    console.log(todoLists)
+    const todoLists = useAppSelector<TodoListEntityType[]>(state => state.todoListsReducer)
 
-    const dispatch = useDispatch()
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        dispatch(getTodoListThunkCreator())
+    }, [])
 
     const addNewTodoList = useCallback((newValue: string) => {
         let action = addNewTodoListAC(newValue)

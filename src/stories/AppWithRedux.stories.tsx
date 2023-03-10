@@ -1,10 +1,7 @@
 import React from 'react';
 
 import { ComponentStory, ComponentMeta } from '@storybook/react';
-import {action} from "@storybook/addon-actions";
 import AppWithRedux from "../AppWithRedux";
-import {Provider} from "react-redux";
-import {store} from "../store/store";
 import {ReduxStoreProviderDecoratorHOC} from "../store/ReduxStoreProviderDecoratorHOC";
 
 export default {

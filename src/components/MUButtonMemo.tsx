@@ -1,6 +1,7 @@
 import React, {memo} from 'react';
 import Button from "@mui/material/Button";
-import {FilterTasksType} from "../AppWithRedux";
+import { FilterTasksType } from '../reducers/todolists-reducer';
+
 
 type PropsType = {
     value: FilterTasksType

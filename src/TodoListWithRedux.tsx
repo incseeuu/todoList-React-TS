@@ -1,37 +1,40 @@
-import React, {ChangeEvent, memo, useCallback, useMemo} from "react";
-import {FilterTasksType} from "./App";
+import React, {memo, useCallback, useEffect, useMemo} from "react";
+
 import './App.css';
 import UltraInput from "./ultraComponents/UltraInput";
 import UltraSpanForChangeValue from "./ultraComponents/UltraSpanForChangeValue";
-import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Checkbox from '@mui/material/Checkbox';
-import {TodoListType} from "./AppWithRedux";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./store/store";
-import {addTaskAC, changeIsDoneStatusAC, removeTaskAC, updateTitleTasksAC} from "./reducers/tasks-reducer";
-import {changeFilterTasksAC, removeTodoListAC, updateTodoListsTitleAC} from "./reducers/todolists-reducer";
+import {AppRootStateType, useAppDispatch, useAppSelector} from "./store/store";
+import {addTaskAC, addTaskThunkCreator, getTaskThunkCreator} from "./reducers/tasks-reducer";
+import {
+    changeFilterTasksAC,
+    FilterTasksType,
+    removeTodoListAC,
+    TodoListEntityType,
+    updateTodoListsTitleAC
+} from "./reducers/todolists-reducer";
 import Task from "./Task";
 import MUButtonMemo from "./components/MUButtonMemo";
-import task from "./Task";
+import {TaskStatuses, TasksType} from "./api/todolist-API";
 
 type PropsType = {
-    todoList: TodoListType
+    todoList: TodoListEntityType
 }
 
-export type TasksType = {
-    id: string
-    title: string
-    isDone: boolean
-}
 
 export const TodoListWithRedux = memo(({todoList}: PropsType) => {
     const {id, title, filter} = todoList
 
-    const tasks = useSelector<AppRootStateType, TasksType[]>(state => state.tasksReducer[id])
 
-    const dispatch = useDispatch()
+
+    const tasks = useAppSelector<TasksType[]>(state => state.tasksReducer[id])
+
+    const dispatch = useAppDispatch()
+    useEffect( () => {
+        dispatch(getTaskThunkCreator(id))
+    },[])
 
     const takeOnClickFilterHandler = useCallback((filter: FilterTasksType) => {
         dispatch(changeFilterTasksAC(id, filter))
@@ -43,7 +46,7 @@ export const TodoListWithRedux = memo(({todoList}: PropsType) => {
     }, [id])
 
     const addTask = useCallback((newValue: string) => {
-        dispatch(addTaskAC(id, newValue))
+        dispatch(addTaskThunkCreator(id,newValue))
     }, [id])
 
     const deleteTodoListHandler = () => {
@@ -53,9 +56,9 @@ export const TodoListWithRedux = memo(({todoList}: PropsType) => {
     const getFilteredTasksForRender = useMemo(() => {
         switch (filter) {
             case "Active":
-                return tasks.filter((el) => !el.isDone)
+                return tasks.filter((el) => el.status === TaskStatuses.New)
             case "Completed":
-                return tasks.filter((el) => el.isDone)
+                return tasks.filter((el) => el.status === TaskStatuses.Completed)
             default:
                 return tasks;
         }
@@ -68,7 +71,7 @@ export const TodoListWithRedux = memo(({todoList}: PropsType) => {
                 key={el.id}
                 todoListId={id}
                 taskId={el.id}
-                isDone={el.isDone}
+                status={el.status}
                 title={el.title}
             />
         })

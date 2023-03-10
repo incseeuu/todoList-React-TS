@@ -19,7 +19,7 @@ export const TaskNotDoneStory = Template.bind({})
 TaskNotDoneStory.args = {
     todoListId: '123',
     taskId: '1233',
-    isDone: false,
+    status: 0,
     title: 'Test task for example'
 }
 
@@ -30,6 +30,6 @@ export const TaskDoneStory = Template1.bind({})
 TaskDoneStory.args = {
     todoListId: '123',
     taskId: '1233',
-    isDone: true,
+    status: 2,
     title: 'Test task for example'
 }
