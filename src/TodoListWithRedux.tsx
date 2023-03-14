@@ -9,11 +9,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType, useAppDispatch, useAppSelector} from "./store/store";
 import {addTaskAC, addTaskThunkCreator, getTaskThunkCreator} from "./reducers/tasks-reducer";
 import {
-    changeFilterTasksAC,
+    changeFilterTasksAC, deleteTodoListThunkCreator,
     FilterTasksType,
     removeTodoListAC,
     TodoListEntityType,
-    updateTodoListsTitleAC
+    updateTodoListsTitleAC, updateTodoListThunkCreator
 } from "./reducers/todolists-reducer";
 import Task from "./Task";
 import MUButtonMemo from "./components/MUButtonMemo";
@@ -42,7 +42,7 @@ export const TodoListWithRedux = memo(({todoList}: PropsType) => {
 
 
     const updateTodolistsTitleCallBack = useCallback((newValue: string) => {
-        dispatch(updateTodoListsTitleAC(id, newValue))
+        dispatch(updateTodoListThunkCreator(id, newValue))
     }, [id])
 
     const addTask = useCallback((newValue: string) => {
@@ -50,7 +50,7 @@ export const TodoListWithRedux = memo(({todoList}: PropsType) => {
     }, [id])
 
     const deleteTodoListHandler = () => {
-        dispatch(removeTodoListAC(id))
+        dispatch(deleteTodoListThunkCreator(id))
     }
 
     const getFilteredTasksForRender = useMemo(() => {

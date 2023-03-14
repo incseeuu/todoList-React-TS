@@ -4,7 +4,12 @@ import UltraInput from "./ultraComponents/UltraInput";
 import ButtonAppBar from "./components/Header";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import {addNewTodoListAC, getTodoListThunkCreator, TodoListEntityType} from "./reducers/todolists-reducer";
+import {
+    addTodoListThunkCreator,
+    addNewTodoListAC,
+    getTodoListThunkCreator,
+    TodoListEntityType
+} from "./reducers/todolists-reducer";
 import {useAppDispatch, useAppSelector} from "./store/store";
 import {TodoListWithRedux} from "./TodoListWithRedux";
 
@@ -20,9 +25,9 @@ function AppWithRedux() {
     }, [])
 
     const addNewTodoList = useCallback((newValue: string) => {
-        let action = addNewTodoListAC(newValue)
-        dispatch(action)
-    }, [dispatch])
+        // let action = addNewTodoListAC(newValue)
+        dispatch(addTodoListThunkCreator(newValue))
+    }, [])
 
 
 

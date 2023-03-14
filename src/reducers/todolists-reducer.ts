@@ -97,3 +97,24 @@ export const getTodoListThunkCreator = () => (dispatch: Dispatch) => {
     todolistAPI.getTodoList()
         .then(res => dispatch(setTodoListAC(res.data)))
 }
+
+export const addTodoListThunkCreator = (title: string) => (dispatch: Dispatch<GeneralActionType>) => {
+    todolistAPI.createTodoList(title)
+        .then(res => {
+            dispatch(addNewTodoListAC(title))
+        })
+}
+
+export const deleteTodoListThunkCreator = (todolistId: string) => (dispatch: Dispatch<GeneralActionType>) => {
+    todolistAPI.deleteTodoList(todolistId)
+        .then(res => {
+            dispatch(removeTodoListAC(todolistId))
+        })
+}
+
+export const updateTodoListThunkCreator = (todolistId: string, title: string) => (dispatch: Dispatch<GeneralActionType>) => {
+    todolistAPI.updateTodoList(todolistId, title)
+        .then(res => {
+            dispatch(updateTodoListsTitleAC(todolistId, title))
+        })
+}
