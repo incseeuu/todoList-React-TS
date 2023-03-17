@@ -1,11 +1,10 @@
 import {v1} from "uuid";
 import {
     addTaskAC,
-    changeIsDoneStatusAC,
+    updateTaskAC,
     removeTaskAC,
     tasksReducer,
     TodoListsTasksType,
-    updateTitleTasksAC
 } from "../reducers/tasks-reducer";
 
 let todolistID1: string
@@ -50,7 +49,6 @@ test('add new task reducer', () => {
     expect(endState[todolistID2][5].title).toBe("GraphQL2")
     expect(endState[todolistID2][5].status).toBe(0)
     expect(endState[todolistID2][1].status).toBe(2)
-    expect(endState[todolistID2][1].id).toBeDefined()
     expect(startState[todolistID2].length).toBe(5)
 })
 
@@ -68,7 +66,7 @@ test('change task status reducer', () => {
     const newTask = {id: v1(), title: 'React Native', status: 2, addedDate:'',deadline:'', order: 0, completed: false, todoListId: todolistID2, startDate: '', description: '', priority: 0}
 
 
-    const endState = tasksReducer(startState,changeIsDoneStatusAC(todolistID1,taskId, newTask))
+    const endState = tasksReducer(startState,updateTaskAC(todolistID1,taskId, newTask))
 
     expect(endState[todolistID1][1].status).toBe(0)
     expect(startState[todolistID1][1].status).toBe(2)
@@ -78,7 +76,7 @@ test('change title tasks reducer', () => {
 
     const newTitle = 'VANILLA JS'
 
-    const endState = tasksReducer(startState, updateTitleTasksAC(todolistID1, taskId, newTitle))
+    const endState = tasksReducer(startState, updateTaskAC(todolistID1, taskId, {title: newTitle}))
 
     expect(endState[todolistID1][1].title).toBe(newTitle)
     expect(startState[todolistID1][1].title).toBe('JS')

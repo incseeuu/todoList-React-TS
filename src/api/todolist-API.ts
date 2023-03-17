@@ -1,4 +1,5 @@
 import axios from "axios";
+import {LoadingType} from "../reducers/app-reducer";
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1/todo-lists/',
@@ -64,7 +65,7 @@ export type DeletePostTasksType<T> = {
     resultCode: number
 }
 
-export type PostTaskType = {
+export type TaskTypeForChangeApi = {
     title: string
     description: string | null
     deadline: string | null
@@ -91,12 +92,12 @@ export const todolistAPI = {
         return instance.get<GetTasksType>(`${todoListId}/tasks`)
     },
     addTasks: (todoListId: string, title: string) => {
-        return instance.post<DeletePostTasksType<{item: TasksType}>>(`${todoListId}/tasks`, {title}).then(res => res.data)
+        return instance.post<DeletePostTasksType<{item: TasksType}>>(`${todoListId}/tasks`, {title})
     },
     deleteTask: (todolistId: string, taskId: string) => {
         return instance.delete<DeletePostTasksType<{}>>(`${todolistId}/tasks/${taskId}`)
     },
-    updateTask: (todolistId: string, taskId: string, task: PostTaskType) => {
-        return instance.put<DeletePostTasksType<{item: TasksType}>>(`${todolistId}/tasks/${taskId}`, task).then(res => res.data)
+    updateTask: (todolistId: string, taskId: string, task: TaskTypeForChangeApi) => {
+        return instance.put<DeletePostTasksType<{item: TasksType} >>(`${todolistId}/tasks/${taskId}`, task)
     },
 }

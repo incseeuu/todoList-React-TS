@@ -4,6 +4,7 @@ import TextField from '@mui/material/TextField';
 
 type TypeProps = {
     callback: (newValue: string) => void
+    disable?: boolean
 }
 
 const UltraInput = memo((props: TypeProps) => {
@@ -38,8 +39,10 @@ const UltraInput = memo((props: TypeProps) => {
                        error={!!error}
                        value={newValue}
                        onChange={onChangeInputValueHandler}
-                       onKeyDown={onKeyDownHandler}/>
-            <Button size="medium" variant="contained" onClick={onClickButtonHandler}>+</Button>
+                       onKeyDown={onKeyDownHandler}
+                       disabled={props.disable}
+            />
+            <Button disabled={props.disable} size="medium" variant="contained" onClick={onClickButtonHandler}>+</Button>
         </>
     )
 })

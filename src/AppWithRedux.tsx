@@ -4,19 +4,18 @@ import UltraInput from "./ultraComponents/UltraInput";
 import ButtonAppBar from "./components/Header";
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-import {
-    addTodoListThunkCreator,
-    addNewTodoListAC,
-    getTodoListThunkCreator,
-    TodoListEntityType
-} from "./reducers/todolists-reducer";
+import {addTodoListThunkCreator, getTodoListThunkCreator, TodoListEntityType} from "./reducers/todolists-reducer";
 import {useAppDispatch, useAppSelector} from "./store/store";
 import {TodoListWithRedux} from "./TodoListWithRedux";
+import LinearProgress from '@mui/material/LinearProgress';
+import {LoadingType} from "./reducers/app-reducer";
+import Error from "./components/Error";
 
 
 function AppWithRedux() {
 
     const todoLists = useAppSelector<TodoListEntityType[]>(state => state.todoListsReducer)
+    const loading = useAppSelector<LoadingType>(state => state.appReducer.loading)
 
     const dispatch = useAppDispatch()
 
@@ -34,6 +33,7 @@ function AppWithRedux() {
     return (
         <div className="App">
             <ButtonAppBar/>
+            {loading === 'loading' && <LinearProgress color="secondary" />}
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px'}}> ADD NEW
                 TODOLIST
                 <div style={{display: "flex", marginTop: "5px", marginBottom: '10px'}}>
@@ -60,6 +60,7 @@ function AppWithRedux() {
                     )
                 })}
             </Grid>
+            <Error />
         </div>
     )
         ;

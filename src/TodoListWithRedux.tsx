@@ -5,15 +5,14 @@ import UltraInput from "./ultraComponents/UltraInput";
 import UltraSpanForChangeValue from "./ultraComponents/UltraSpanForChangeValue";
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType, useAppDispatch, useAppSelector} from "./store/store";
-import {addTaskAC, addTaskThunkCreator, getTaskThunkCreator} from "./reducers/tasks-reducer";
+import {useAppDispatch, useAppSelector} from "./store/store";
+import {addTaskThunkCreator, getTaskThunkCreator} from "./reducers/tasks-reducer";
 import {
-    changeFilterTasksAC, deleteTodoListThunkCreator,
+    changeFilterTasksAC,
+    deleteTodoListThunkCreator,
     FilterTasksType,
-    removeTodoListAC,
     TodoListEntityType,
-    updateTodoListsTitleAC, updateTodoListThunkCreator
+    updateTodoListThunkCreator
 } from "./reducers/todolists-reducer";
 import Task from "./Task";
 import MUButtonMemo from "./components/MUButtonMemo";
@@ -25,7 +24,7 @@ type PropsType = {
 
 
 export const TodoListWithRedux = memo(({todoList}: PropsType) => {
-    const {id, title, filter} = todoList
+    const {id, title, filter, queryStatus} = todoList
 
 
 
@@ -82,15 +81,15 @@ export const TodoListWithRedux = memo(({todoList}: PropsType) => {
         <div>
             <span style={{display: "flex", alignItems: "center", justifyContent: 'center'}}>
                 <h3>
-                    <UltraSpanForChangeValue oldTitle={title} callBack={updateTodolistsTitleCallBack}/>
+                    <UltraSpanForChangeValue disable={queryStatus === 'inProgress'} oldTitle={title} callBack={updateTodolistsTitleCallBack}/>
                 </h3>
-                <IconButton aria-label="delete" onClick={deleteTodoListHandler}>
+                <IconButton disabled={queryStatus === 'inProgress'} aria-label="delete" onClick={deleteTodoListHandler}>
                     <DeleteIcon/>
                 </IconButton>
             </span>
 
             <div>
-                <UltraInput callback={addTask}/>
+                <UltraInput disable={queryStatus === 'inProgress'} callback={addTask}/>
             </div>
 
             <ul>

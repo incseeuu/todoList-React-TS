@@ -103,7 +103,7 @@ export const PostTasks = () => {
 
         todolistAPI.addTasks(idTodoList, 'AEOEOOEEO')
             .then(res => {
-                setState(res.data.item)
+                setState(res.data.data.item)
                 console.log(res.data)
             })
 
@@ -146,7 +146,7 @@ export const UpdateTasks = () => {
 
         todolistAPI.updateTask(idTodoList, taskId, task)
             .then(res => {
-                setState(res)
+                setState(res.data)
             })
 
     }, [])

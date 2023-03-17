@@ -3,14 +3,7 @@ import Checkbox from "@mui/material/Checkbox";
 import UltraSpanForChangeValue from "./ultraComponents/UltraSpanForChangeValue";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-    changeIsDoneStatusAC,
-    removeTaskAC,
-    removeTaskThunkCreator,
-    updateTaskThunkCreator,
-    updateTitleTasksAC
-} from "./reducers/tasks-reducer";
-import {useDispatch} from "react-redux";
+import {removeTaskThunkCreator, updateTaskThunkCreator,} from "./reducers/tasks-reducer";
 import {TaskStatuses} from "./api/todolist-API";
 import {useAppDispatch} from "./store/store";
 
@@ -28,12 +21,12 @@ const Task: React.FC<PropsType> = (
     const dispatch = useAppDispatch()
 
     const changeTaskTitle = useCallback((taskId: string, newValue: string) => {
-        dispatch(updateTitleTasksAC(todoListId, taskId, newValue))
+        dispatch(updateTaskThunkCreator(todoListId, taskId, {title: newValue}))
     }, [todoListId])
 
     const onChangeTaskStatusHandler = (checked: boolean, taskId: string) => {
         let status: TaskStatuses = checked ? TaskStatuses.Completed : TaskStatuses.New
-        dispatch(updateTaskThunkCreator(todoListId, taskId, status))
+        dispatch(updateTaskThunkCreator(todoListId, taskId, {status}))
 
     }
 

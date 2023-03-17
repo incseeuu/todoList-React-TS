@@ -16,19 +16,19 @@ beforeEach(() => {
     todolistID2 = v1()
 
     startState = [
-        {id: todolistID1, title: 'What to learn', filter: 'All', addedDate: '', order: 0},
-        {id: todolistID2, title: 'What to buy', filter: 'All', addedDate: '', order: 0},
+        {id: todolistID1, title: 'What to learn', filter: 'All', addedDate: '', order: 0, queryStatus: 'idle'},
+        {id: todolistID2, title: 'What to buy', filter: 'All', addedDate: '', order: 0, queryStatus: 'idle'},
     ]
 })
 
 test('add todolist reducer', () => {
 
-    let newTodoListTitle = 'Should I Do'
+    let newTodoListTitle = {id: todolistID1, title: 'New Todo List', filter: 'All', addedDate: '', order: 0}
 
     const endState = todoListsReducer(startState, addNewTodoListAC(newTodoListTitle))
 
     expect(endState.length).toBe(3)
-    expect(endState[2].title).toBe('Should I Do')
+    expect(endState[2].title).toBe('New Todo List')
     expect(startState.length).toBe(2)
     expect(endState.map(el=> el.filter)).toStrictEqual(['All', 'All', 'All'])
     expect(endState[2].id).toBeDefined()
