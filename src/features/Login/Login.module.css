@@ -1,0 +1,9 @@
+.container {
+    position: relative;
+    top: 40vh;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}

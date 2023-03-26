@@ -10,17 +10,28 @@ import {TodoListWithRedux} from "./TodoListWithRedux";
 import LinearProgress from '@mui/material/LinearProgress';
 import {LoadingType} from "./reducers/app-reducer";
 import Error from "./components/Error";
+import {AuthStateType, checkLoggedTC} from "./features/Login/auth-reducer";
+import {Navigate} from "react-router-dom";
+import Loader from './components/Loader/Loader';
 
 
 function AppWithRedux() {
 
     const todoLists = useAppSelector<TodoListEntityType[]>(state => state.todoListsReducer)
     const loading = useAppSelector<LoadingType>(state => state.appReducer.loading)
+    const isInitialized = useAppSelector(state => state.authReducer.isInitialized)
+    const isLoggedIn = useAppSelector(state => state.authReducer.isLoggedIn)
 
     const dispatch = useAppDispatch()
 
     useEffect(() => {
-        dispatch(getTodoListThunkCreator())
+        if(isLoggedIn){
+            dispatch(getTodoListThunkCreator())
+        } else {
+            dispatch(checkLoggedTC())
+        }
+
+
     }, [])
 
     const addNewTodoList = useCallback((newValue: string) => {
@@ -29,11 +40,14 @@ function AppWithRedux() {
     }, [])
 
 
+    if(!isLoggedIn){
+        return <Navigate to={'/login'}/>
+    }
 
     return (
         <div className="App">
             <ButtonAppBar/>
-            {loading === 'loading' && <LinearProgress color="secondary" />}
+            {loading === 'loading' && <LinearProgress color="secondary"/>}
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '20px'}}> ADD NEW
                 TODOLIST
                 <div style={{display: "flex", marginTop: "5px", marginBottom: '10px'}}>
@@ -46,9 +60,8 @@ function AppWithRedux() {
                 {todoLists.map(el => {
 
 
-
                     return (
-                        <Grid key={el.id} item >
+                        <Grid key={el.id} item>
                             <Paper elevation={12}>
                                 <TodoListWithRedux
                                     key={el.id}
@@ -56,14 +69,12 @@ function AppWithRedux() {
                                 />
                             </Paper>
                         </Grid>
-
                     )
                 })}
             </Grid>
-            <Error />
+            <Error/>
         </div>
-    )
-        ;
+    );
 }
 
 export default AppWithRedux;
